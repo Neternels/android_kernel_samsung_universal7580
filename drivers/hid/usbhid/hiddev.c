@@ -1,4 +1,4 @@
-drivers/hid/usbhid/hiddev.c/*
+/*
  *  Copyright (c) 2001 Paul Stewart
  *  Copyright (c) 2001 Vojtech Pavlik
  *
@@ -563,7 +563,6 @@ fault:
 inval:
 		kfree(uref_multi);
 		return -EINVAL;
-	}
 }
 
 static noinline int hiddev_ioctl_string(struct hiddev *hiddev, unsigned int cmd, void __user *user_arg)
