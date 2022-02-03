@@ -172,7 +172,7 @@ DATE=$(TZ=GMT-8 date +"%Y%m%d-%H%M")
 	if [ $COMPILER = "gcc" ]
 	then
 		msg "|| Cloning GCC 4.9 ||"
-	        wget -O gcc64.tar.xz https://releases.linaro.org/components/toolchain/binaries/4.9-2016.02/aarch64-linux-gnu/gcc-linaro-4.9-2016.02-x86_64_aarch64-linux-gnu.tar.xz;tar -xf gcc64.tar.xz;rm -rf gcc64.tar.xz;mv *gnu gcc64
+	        wget -O gcc64.tar.xz https://releases.linaro.org/components/toolchain/binaries/4.9-2016.02/aarch64-linux-gnu/gcc-linaro-4.9-2016.02-x86_64_aarch64-linux-gnu.tar.xz;tar -xf gcc64.tar.xz;rm -rf gcc64.tar.xz;mv gcc-linaro-4.9-2016.02-x86_64_aarch64-linux-gnu gcc64
 		GCC64_DIR=$KERNEL_DIR/gcc64
 	fi
 	
@@ -186,8 +186,6 @@ DATE=$(TZ=GMT-8 date +"%Y%m%d-%H%M")
 
 	msg "|| Cloning Anykernel ||"
 	git clone --depth 1 --no-single-branch https://github.com/NetErnels/AnyKernel3.git -b j7elte
-	msg "|| Cloning libufdt ||"
-	git clone https://android.googlesource.com/platform/system/libufdt "$KERNEL_DIR"/scripts/ufdt/libufdt
 	if [ $MODULES = "1" ]
 	then
 	    msg "|| Cloning neternels-modules ||"
@@ -258,7 +256,7 @@ build_kernel() {
 		tg_post_msg "<b>$KBUILD_BUILD_VERSION CI Build Triggered</b>%0A<b>Docker OS: </b><code>$DISTRO</code>%0A<b>Kernel Version : </b><code>$KERVER</code>%0A<b>Date : </b><code>$(TZ=GMT-8 date)</code>%0A<b>Device : </b><code>$MODEL [$DEVICE]</code>%0A<b>Pipeline Host : </b><code>$KBUILD_BUILD_HOST</code>%0A<b>Host Core Count : </b><code>$PROCS</code>%0A<b>Compiler Used : </b><code>$KBUILD_COMPILER_STRING</code>%0A<b>Branch : </b><code>$CI_BRANCH</code>%0A<b>Top Commit : </b><code>$COMMIT_HEAD</code>%0A<a href='$SERVER_URL'>Link</a>"
 	fi
 
-	make O=out $DEFCONFIG
+	mkdir out;make O=out $DEFCONFIG
 	if [ $DEF_REG = 1 ]
 	then
 		cp .config arch/arm64/configs/$DEFCONFIG
@@ -283,7 +281,7 @@ build_kernel() {
 	elif [ $COMPILER = "gcc" ]
 	then
 		MAKE+=(
-			CROSS_COMPILE=aarch64-lnux-gnu- \
+			CROSS_COMPILE=aarch64-linux-gnu- \
 		)
 	fi
 	
